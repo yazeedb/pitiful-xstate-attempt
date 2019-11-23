@@ -1,22 +1,23 @@
 import React from 'react';
-import logo from './logo.svg';
-import {
-  NotificationMachine,
-  openEvent,
-  closeEvent,
-  States
-} from './NotificationMachine';
+import { useNotificationMachine } from './useNotificationMachine';
 import { useMachine } from '@xstate/react';
 import './App.css';
-import { countMachine } from './CountMachine';
 
 interface NotificationProps {
-  message: string | null;
-  open: boolean;
+  show: boolean;
+  message: string;
+  pause: () => void;
+  resume: () => void;
+  close: () => void;
 }
-const Notification: React.FC<NotificationProps> = ({ open, message }) => {
-  console.log({ message });
-  return open && message ? (
+const Notification: React.FC<NotificationProps> = ({
+  show,
+  message,
+  pause,
+  resume,
+  close
+}) =>
+  show ? (
     <div
       className="notification"
       style={{
@@ -27,25 +28,18 @@ const Notification: React.FC<NotificationProps> = ({ open, message }) => {
         width: '100px',
         height: '30px'
       }}
+      onMouseEnter={pause}
+      onMouseLeave={resume}
+      onClick={close}
     >
-      <p
-        style={{
-          color: 'white'
-        }}
-      >
-        {message}
-      </p>
+      <p style={{ color: 'white' }}>{message}</p>
     </div>
   ) : null;
-};
 
 const App: React.FC = () => {
-  const [state, send] = useMachine(NotificationMachine);
+  const { state, open, close, pause, resume, show } = useNotificationMachine();
 
-  const [state2, send2] = useMachine(countMachine);
-  const { message } = state.context;
-
-  console.log(state2);
+  console.log('State:', state);
 
   return (
     <div
@@ -54,37 +48,23 @@ const App: React.FC = () => {
         marginTop: '100px'
       }}
     >
-      <button
-        onClick={() => {
-          console.log('click');
-          send2('increment');
-        }}
-      >
-        +1
-      </button>
-      <button
-        onClick={() => {
-          send2('decrement');
-        }}
-      >
-        -1
-      </button>
+      <Notification
+        show={show}
+        pause={pause}
+        resume={resume}
+        close={close}
+        message={state.context.message}
+      />
 
-      <Notification open={state.matches(States.opened)} message={message} />
       <button
         onClick={() => {
-          send(openEvent('Hello Beef'));
+          open('Hello World');
         }}
       >
         Open
       </button>
-      <button
-        onClick={() => {
-          send(closeEvent());
-        }}
-      >
-        Close
-      </button>
+
+      <button onClick={close}>Close</button>
     </div>
   );
 };
