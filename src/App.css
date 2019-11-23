@@ -20,3 +20,20 @@
 .App-link {
   color: #09d3ac;
 }
+
+.notification {
+  visibility: visible;
+  opacity: 1;
+  transition: visibility 0s linear 0s, opacity 300ms;
+}
+
+.notification:hover {
+  transform: scale(1.05);
+  transition: transform linear 0.1s;
+}
+
+.notification.fade-out {
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0s linear 300ms, opacity 300ms;
+}

@@ -15,16 +15,22 @@ const Notification: React.FC<NotificationProps> = ({
   pause,
   resume,
   close
-}) =>
-  show ? (
+}) => {
+  const baseClassName = 'notification';
+
+  return (
     <div
-      className="notification"
+      className={show ? baseClassName : `${baseClassName} fade-out`}
       style={{
         position: 'fixed',
         top: '10px',
         right: '10px',
         backgroundColor: 'black',
-        width: '100px'
+        width: '200px',
+        minHeight: '50px',
+        borderRadius: '3px',
+        cursor: 'pointer',
+        padding: '0 10px'
       }}
       onMouseEnter={pause}
       onMouseLeave={resume}
@@ -32,18 +38,19 @@ const Notification: React.FC<NotificationProps> = ({
     >
       <p style={{ color: 'white' }}>{message}</p>
     </div>
-  ) : null;
+  );
+};
 
 const App: React.FC = () => {
   const { state, open, close, pause, resume, show } = useNotificationMachine();
-
-  console.log('State:', state);
 
   return (
     <div
       className="App"
       style={{
-        marginTop: '100px'
+        maxWidth: '960px',
+        margin: '0 auto',
+        marginTop: '200px'
       }}
     >
       <Notification
@@ -54,15 +61,19 @@ const App: React.FC = () => {
         message={state.context.message}
       />
 
+      <h1>Notification Squad</h1>
+
       <button
         onClick={() => {
-          open('Hello World');
+          open('Click to close, hover to keep.');
+        }}
+        style={{
+          padding: '8px 16px',
+          fontSize: '24px'
         }}
       >
         Open
       </button>
-
-      <button onClick={close}>Close</button>
     </div>
   );
 };
