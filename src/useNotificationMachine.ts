@@ -29,7 +29,12 @@ const NotificationMachine = Machine({
   states: {
     [States.closed]: {
       on: {
-        [Transitions.OPEN]: States.opened
+        [Transitions.OPEN]: {
+          target: States.opened,
+          actions: assign({
+            message: (_: any, event: any) => event.message
+          })
+        }
       }
     },
     [States.opened]: {
@@ -44,14 +49,6 @@ const NotificationMachine = Machine({
         [Transitions.RESUME]: States.opened,
         [Transitions.CLOSE]: States.closed
       }
-    }
-  },
-  on: {
-    [Transitions.OPEN]: {
-      target: States.opened,
-      actions: assign({
-        message: (_: any, event: any) => event.message
-      })
     }
   }
 });
