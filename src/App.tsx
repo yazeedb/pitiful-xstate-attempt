@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNotificationMachine } from './useNotificationMachine';
-import { useMachine } from '@xstate/react';
 import './App.css';
 
 interface NotificationProps {
@@ -25,8 +24,7 @@ const Notification: React.FC<NotificationProps> = ({
         top: '10px',
         right: '10px',
         backgroundColor: 'black',
-        width: '100px',
-        height: '30px'
+        width: '100px'
       }}
       onMouseEnter={pause}
       onMouseLeave={resume}
