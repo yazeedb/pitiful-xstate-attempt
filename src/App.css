@@ -1,39 +1,80 @@
-.App {
+body {
+  font-family: sans-serif;
   text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
+  background-color: #24272f;
   color: white;
+  padding-top: 100px;
 }
 
-.App-link {
-  color: #09d3ac;
+button,
+.notification {
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+button {
+  padding: 8px 16px;
+  font-size: 24px;
+  color: white;
+  font-weight: bold;
+  border: none;
+  margin: 0 5px;
 }
 
 .notification {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  width: 200px;
+  padding: 4px 8px;
+
   visibility: visible;
   opacity: 1;
   transition: visibility 0s linear 0s, opacity 300ms;
-}
-
-.notification:hover {
-  transform: scale(1.05);
-  transition: transform linear 0.1s;
 }
 
 .notification.fade-out {
   visibility: hidden;
   opacity: 0;
   transition: visibility 0s linear 300ms, opacity 300ms;
+}
+
+.success {
+  background-color: #00c851;
+}
+
+.success:hover {
+  background-color: #007e33;
+}
+
+.danger {
+  background-color: #ff4444;
+}
+
+.danger:hover {
+  background-color: #cc0000;
+}
+
+.info {
+  background-color: #33b5e5;
+}
+
+.info:hover {
+  background-color: #0099cc;
+}
+
+.warning {
+  background-color: #ffbb33;
+}
+
+.warning:hover {
+  background-color: #ff8800;
+}
+
+@media only screen and (max-width: 550px) {
+  button {
+    display: block;
+    margin: 10px auto;
+    width: 150px;
+  }
 }

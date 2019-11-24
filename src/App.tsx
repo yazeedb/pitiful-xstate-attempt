@@ -1,10 +1,14 @@
 import React from 'react';
-import { useNotificationMachine } from './useNotificationMachine';
+import {
+  useNotificationMachine,
+  NotificationType
+} from './useNotificationMachine';
 import './App.css';
 
 interface NotificationProps {
   show: boolean;
   message: string;
+  notificationType: NotificationType;
   pause: () => void;
   resume: () => void;
   close: () => void;
@@ -14,65 +18,95 @@ const Notification: React.FC<NotificationProps> = ({
   message,
   pause,
   resume,
-  close
+  close,
+  notificationType
 }) => {
-  const baseClassName = 'notification';
+  const baseClassName = `notification ${notificationType}`;
 
   return (
     <div
       className={show ? baseClassName : `${baseClassName} fade-out`}
-      style={{
-        position: 'fixed',
-        top: '10px',
-        right: '10px',
-        backgroundColor: 'black',
-        width: '200px',
-        minHeight: '50px',
-        borderRadius: '3px',
-        cursor: 'pointer',
-        padding: '0 10px'
-      }}
       onMouseEnter={pause}
       onMouseLeave={resume}
       onClick={close}
     >
-      <p style={{ color: 'white' }}>{message}</p>
+      <p>{message}</p>
     </div>
   );
 };
 
 const App: React.FC = () => {
-  const { state, open, close, pause, resume, show } = useNotificationMachine();
+  const { state, send, show } = useNotificationMachine();
 
   return (
-    <div
-      className="App"
-      style={{
-        maxWidth: '960px',
-        margin: '0 auto',
-        marginTop: '200px'
-      }}
-    >
+    <div>
       <Notification
         show={show}
-        pause={pause}
-        resume={resume}
-        close={close}
+        pause={() => {
+          send('PAUSE');
+        }}
+        resume={() => {
+          send('RESUME');
+        }}
+        close={() => {
+          send('CLOSE');
+        }}
         message={state.context.message}
+        notificationType={state.context.notificationType}
       />
 
       <h1>Notification Squad</h1>
 
       <button
+        className="success"
         onClick={() => {
-          open('Click to close, hover to keep.');
-        }}
-        style={{
-          padding: '8px 16px',
-          fontSize: '24px'
+          send({
+            type: 'OPEN',
+            message: 'Success!',
+            notificationType: 'success'
+          });
         }}
       >
-        Open
+        Success
+      </button>
+
+      <button
+        className="info"
+        onClick={() => {
+          send({
+            type: 'OPEN',
+            message: 'Info!',
+            notificationType: 'info'
+          });
+        }}
+      >
+        Info
+      </button>
+
+      <button
+        className="warning"
+        onClick={() => {
+          send({
+            type: 'OPEN',
+            message: 'Warning!',
+            notificationType: 'warning'
+          });
+        }}
+      >
+        Warning
+      </button>
+
+      <button
+        className="danger"
+        onClick={() => {
+          send({
+            type: 'OPEN',
+            message: 'Danger!',
+            notificationType: 'danger'
+          });
+        }}
+      >
+        Error
       </button>
     </div>
   );
