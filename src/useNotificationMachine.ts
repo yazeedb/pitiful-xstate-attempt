@@ -1,44 +1,9 @@
 import { Machine, assign } from 'xstate';
 import { useMachine } from '@xstate/react';
 
-enum States {
-  closed = 'closed',
-  opened = 'opened',
-  paused = 'paused'
-}
-
-interface NotificationStateSchema {
-  states: {
-    [States.closed]: {};
-    [States.opened]: {};
-    [States.paused]: {};
-  };
-}
-
-export type NotificationType = 'success' | 'danger' | 'warning' | 'info';
-
-type NotificationEvent =
-  | { type: 'CLOSE' }
-  | { type: 'PAUSE' }
-  | { type: 'RESUME' }
-  | {
-      type: 'OPEN';
-      message: string;
-      notificationType: NotificationType;
-    };
-
-interface NotificationContext {
-  message: string;
-  notificationType: NotificationType;
-}
-
-const NotificationMachine = Machine<
-  NotificationContext,
-  NotificationStateSchema,
-  NotificationEvent
->({
+const NotificationMachine = Machine({
   id: 'notification',
-  initial: States.closed,
+  initial: 'closed',
   context: {
     message: '',
     notificationType: 'info'
@@ -47,24 +12,26 @@ const NotificationMachine = Machine<
     closed: {},
     opened: {
       on: {
-        CLOSE: States.closed,
-        PAUSE: States.paused
+        CLOSE: 'closed',
+        PAUSE: 'paused'
       },
-      after: { 1500: 'closed' }
+      after: {
+        '1500': 'closed'
+      }
     },
     paused: {
       on: {
-        RESUME: States.opened,
-        CLOSE: States.closed
+        RESUME: 'opened',
+        CLOSE: 'closed'
       }
     }
   },
   on: {
     OPEN: {
-      target: States.opened,
+      target: 'opened',
       actions: assign({
-        message: (_, event) => event.message,
-        notificationType: (_, event) => event.notificationType
+        message: (_: any, event: any) => event.message,
+        notificationType: (_: any, event: any) => event.notificationType
       })
     }
   }
@@ -76,6 +43,6 @@ export const useNotificationMachine = () => {
   return {
     state,
     send,
-    show: state.matches(States.opened) || state.matches(States.paused)
+    show: state.matches('opened') || state.matches('paused')
   };
 };

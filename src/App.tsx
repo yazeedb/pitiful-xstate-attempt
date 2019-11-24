@@ -1,14 +1,11 @@
 import React from 'react';
-import {
-  useNotificationMachine,
-  NotificationType
-} from './useNotificationMachine';
+import { useNotificationMachine } from './useNotificationMachine';
 import './App.css';
 
 interface NotificationProps {
   show: boolean;
   message: string;
-  notificationType: NotificationType;
+  notificationType: any;
   pause: () => void;
   resume: () => void;
   close: () => void;
